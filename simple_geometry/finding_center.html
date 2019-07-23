@@ -1,0 +1,65 @@
+<html>
+<head>
+  <style>
+  html,
+  body {
+      height: 100%;
+  }
+  body {
+      margin: 0;
+      border: 0;
+      padding: 0;
+  }
+
+  /* Scale canvas with resize attribute to full size */
+  canvas[resize] {
+      width: 100%;
+      height: 100%;
+  }
+  </style>
+  <script type="text/javascript" src="paper-full.js"></script>
+  <script type="text/paperscript" canvas="myCanvas">
+    var scale = 500;
+
+    // Line 1
+    var path1 = new Path();
+    path1.strokeColor = 'red';
+    var start = new Point(0, 0);
+    path1.moveTo(start);
+    path1.lineTo(start + [ 1 * scale, 1 * scale]);
+
+    // Line 2
+    var path2 = new Path();
+    path2.strokeColor = 'blue';
+    var start = new Point(0, 1 * scale);
+    path2.moveTo(start);
+    path2.lineTo(start + [ 1 * scale, -1 * scale ]);
+
+    // Line 3
+    var path3 = new Path();
+    path3.strokeColor = 'green';
+    var start = new Point(scale / 2, 0);
+    path3.moveTo(start);
+    path3.lineTo(start + [ 0, 1 * scale ]);
+
+    // Line 4
+    var path4 = new Path();
+    path4.strokeColor = 'cyan';
+    var start = new Point(0, scale / 2);
+    path4.moveTo(start);
+    path4.lineTo(start + [ 1 * scale, 0 ]);
+
+    // Center paths
+    function onResize(event) {
+      // Whenever the window is resized, recenter the path:
+      path1.position = view.center;
+      path2.position = view.center;
+      path3.position = view.center;
+      path4.position = view.center;
+    }
+  </script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>

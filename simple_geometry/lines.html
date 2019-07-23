@@ -1,0 +1,50 @@
+<html>
+<head>
+  <style>
+  html,
+  body {
+      height: 100%;
+  }
+  body {
+      margin: 0;
+      border: 0;
+      padding: 0;
+  }
+
+  /* Scale canvas with resize attribute to full size */
+  canvas[resize] {
+      width: 100%;
+      height: 100%;
+  }
+  canvas{
+      border: 1px solid black;
+  }
+  </style>
+  <script type="text/javascript" src="paper-full.js"></script>
+  <script type="text/paperscript" canvas="myCanvas">
+    var scale = 500;
+
+    // Line 1
+    // Create a Paper.js Path to draw a line into it:
+    var path = new Path();
+    // Give the stroke a color
+    path.strokeColor = 'red';
+    var start = new Point(0, 0);
+    // Move to start and draw a line from there
+    path.moveTo(start);
+    // Note the plus operator on Point objects.
+    // PaperScript does that for us, and much more!
+    path.lineTo(start + [ 1 * scale, 1 * scale]);
+
+    // Line 2
+    var path = new Path();
+    path.strokeColor = 'blue';
+    var start = new Point(0, 1 * scale);
+    path.moveTo(start);
+    path.lineTo(start + [ 1 * scale, -1 * scale ]);
+  </script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>
