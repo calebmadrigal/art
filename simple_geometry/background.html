@@ -1,0 +1,47 @@
+<html>
+<head>
+  <style>
+  html,
+  body {
+      height: 100%;
+  }
+  body {
+      margin: 0;
+      border: 0;
+      padding: 0;
+  }
+
+  /* Scale canvas with resize attribute to full size */
+  canvas[resize] {
+      width: 100%;
+      height: 100%;
+  }
+  </style>
+  <script type="text/javascript" src="paper-full.js"></script>
+  <script type="text/paperscript" canvas="myCanvas">
+    var rect = new Path.Rectangle({
+        point: [0, 0],
+        size: [view.size.width / 2, view.size.height / 2],
+        strokeColor: 'white',
+        selected: false
+    });
+    rect.sendToBack();
+    rect.fillColor = '#ff0000';
+
+    function onResize(event) {
+      //rect.size = [view.size.width / 2, view.size.height / 2];
+      //rect.center = [view.size.width / 2, view.size.height / 2];
+      rect.position = new Point( view.size.width / 2, view.size.height / 2 );
+      //rect.center = new Point( view.size.width / 2, view.size.height / 2 );
+      //rect.size = new Size( view.size.width / 2, view.size.height / 2 );
+      rect.left = view.center.x - 100;
+      rect.right = view.center.x - 100;
+      rect.top = view.center.y - 100;
+      rect.bottom = view.center.y + 100;
+    }
+  </script>
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>
