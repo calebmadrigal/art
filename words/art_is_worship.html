@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>d3 trippy text</title>
+  <script type="text/javascript" src="../_lib/d3.js"></script>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+      font-weight: 100;
+      font-size: 10em;
+      letter-spacing:10px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <div id="trippy-text"></div>
+  <script type="text/javascript">
+    var text = "Art is Worship";
+    d3.select("#trippy-text").selectAll("span")
+      .data(text.split(''))
+      .enter()
+      .append('span')
+      .text(function (val) { return val; });
+
+
+    function update() {
+      var randomColors = d3.range(text.length).map(function (n) { return Math.random() * 360; });
+      var spans = d3.selectAll("span")
+        .data(randomColors)
+        .transition()
+        .delay(150)
+        .style("color", function(d, i) {
+          return "hsl(" + d + ",100%,50%)";
+        });
+    }
+
+    setInterval(update, 100);
+  </script>
+</body>
+</html>
