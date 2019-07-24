@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>points</title>
+  <script type="text/javascript" src="../_lib/d3.js"></script>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0px;
+    }
+    svg {
+      border: 0px;
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript">
+    var numPoints = 500;
+    var circleRadius = 5;
+    var numRotations = 10;
+    var pointRadius = 2;
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var svg = d3.select("body").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    // Background
+    svg.append('rect')
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "black")
+
+    var pointGenerator = function() {
+      return d3.range(0, numRotations * Math.PI * 2, numRotations * Math.PI * 2 / numPoints).map(function (d, i) {
+        // Compute circle in center
+        return {"x": d * circleRadius * Math.cos(d) + width / 2,
+                "y": d * circleRadius * Math.sin(d) + height / 2};
+      });
+    };
+
+    var dots = svg.selectAll("circle")
+      .data(pointGenerator())
+      .enter().append("circle")
+      .attr("cx", function(d, i) { return d.x; })
+      .attr("cy", function(d, i) { return d.y; })
+      .attr("r", pointRadius)
+      .style("fill", "white");
+
+  </script>
+</body>
+</html>
