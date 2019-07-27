@@ -19,7 +19,7 @@
   <script type="text/javascript">
     // Parameters
     var numPoints = 2000;
-    var circleRadius = 0.8;
+    var circleRadius = 0.25;
     var numRotations = 185;
     var pointRadius = 2;
     var width = window.innerWidth;
@@ -107,6 +107,9 @@
         bestSoFar = true;
         learningRate = learningRate * .5;  // Lower learning rate to converge
         console.log('Best')
+      }
+      else {
+        learningRate = learningRate * .9;  // Lower learning rate to converge
       }
 
       //dots.data(seeds)
