@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>points</title>
+  <script type="text/javascript" src="../_lib/d3.js"></script>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0px;
+    }
+    svg {
+      border: 0px;
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript">
+    // Parameters
+    var numPoints = 2000;
+    var circleRadius = 0.8;
+    var numRotations = 185;
+    var pointRadius = 2;
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+
+    // Learning stuff
+    var angularMomentumNonce = 1.1;
+    var bestAngularMomentumNonce = 1.1;
+    var bestError = -99999999999999;
+    var learningRate = 0.3;
+
+    // Drawing
+    var svg = d3.select("body").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    // Background
+    svg.append('rect')
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "white")
+
+    var pointGenerator = function(rotationSpeedNonce) {
+      return d3.range(0, numRotations * Math.PI * 2, numRotations * Math.PI * 2 / numPoints).map(function (d, i) {
+        // Compute circle in center
+        return {"x": d * circleRadius * Math.cos(rotationSpeedNonce * d) + width / 2,
+                "y": d * circleRadius * Math.sin(rotationSpeedNonce * d) + height / 2};
+      });
+    };
+
+    var generateStep = function(currentValue, learningRate) {
+      // Take a random step
+      return currentValue + (Math.random() * learningRate - (learningRate / 2));
+    }
+
+    var seedOverlapErrorFunction = function(seeds) {
+      // Calculates the "error" in our seed distribution
+      //
+      // Since we want the seeds as evenly distributed as possible, we need a function to minimize
+      // which will result in the seeds most evenly spread.
+
+      var errorBetweenTwoSeeds = function(seed1, seed2) {
+        // Euclidean distance between 2 points
+        return Math.sqrt(Math.pow(seed1.x - seed2.x, 2) + Math.pow(seed1.y - seed2.y, 2));
+      };
+      var totalError = 0;
+      var index1, index2;
+      // O(n^2) - not fast
+      for (index1 = 0; index1 < seeds.length; index1++) {
+        for (index2 = 0; index2 < seeds.length; index2++) {
+          var errorForPair = errorBetweenTwoSeeds(seeds[index1], seeds[index2]);
+          totalError += errorForPair;
+        }
+      }
+      console.log('Error: ' + totalError);
+      return totalError;
+    };
+
+    var seeds = pointGenerator(angularMomentumNonce);
+
+    var dots = svg.selectAll("circle");
+    dots
+      .data(seeds)
+      .enter().append("circle")
+      .attr("cx", function(d, i) { return d.x; })
+      .attr("cy", function(d, i) { return d.y; })
+      .attr("r", pointRadius)
+      .style("fill", "black");
+
+    function iterate() {
+      var newAngularMomentumNonce = generateStep(angularMomentumNonce, learningRate)
+      //var newAngularMomentumNonce = angularMomentumNonce + 0.07;
+      //angularMomentumNonce = angularMomentumNonce + 0.05;
+      
+      seeds = pointGenerator(newAngularMomentumNonce);
+      //seeds = pointGenerator(angularMomentumNonce);
+      var error = seedOverlapErrorFunction(seeds);
+
+      var bestSoFar = false;
+      if (error > bestError) {
+        bestError = error;
+        bestAngularMomentumNonce = newAngularMomentumNonce;
+        bestSoFar = true;
+        learningRate = learningRate * .5;  // Lower learning rate to converge
+        console.log('Best')
+      }
+
+      //dots.data(seeds)
+      dots = d3.selectAll("circle")
+        .data(seeds);
+
+      dots
+        .transition()
+        .duration(3000)
+        //.ease('elastic')
+        //.attr({r: 2, fill: fill})
+        .attr({r: pointRadius})
+        .style("fill", bestSoFar ? "green" : "red")
+        .attr("cx", function (d, i) { return d.x; })
+        .attr("cy", function (d, i) { return d.y; });
+
+      //dots.transition().ease("elastic").duration(3000)
+      //  .attr("cx", function (d) { return d.cx; })
+      //  .attr("cy", function (d) { return d.cy; })
+    }
+
+    // Make the interval just less than the transition duration so motion never stops
+    setInterval(iterate, 3000);
+
+  </script>
+</body>
+</html>
