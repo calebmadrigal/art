@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>phyllotaxis dance</title>
+  <title>phyllotaxis dance 3</title>
   <script type="text/javascript" src="d3.js"></script>
   <style>
     body {
@@ -18,10 +18,10 @@
 <body>
   <script type="text/javascript">
     // Parameters
-    var numPoints = 2000;
+    var numPoints = 3000;
     var circleRadius = 0.25;
     var numRotations = 185;
-    var pointRadius = 2;
+    var pointRadius = 1.5;
     var width = window.innerWidth;
     var height = window.innerHeight;
 
@@ -116,13 +116,20 @@
       dots = d3.selectAll("circle")
         .data(seeds);
 
+      var dotColorGen = function() {
+        return "hsl(" + Math.random() * 360 + ",100%,30%)";
+      }
+
+      var color = dotColorGen();
       dots
         .transition()
-        .duration(3000)
-        //.ease('elastic')
+        .duration(5000)
+        .ease(d3.easeElastic)
         //.attr({r: 2, fill: fill})
-        .attr({r: pointRadius})
-        .style("fill", bestSoFar ? "green" : "red")
+        //.attr({r: pointRadius})
+        //.style("fill", bestSoFar ? "green" : "red")
+        //.style("fill",function() { return "hsl(" + Math.random() * 360 + ",100%,50%)"; })
+        .style("fill", color)
         .attr("cx", function (d, i) { return d.x; })
         .attr("cy", function (d, i) { return d.y; });
 
@@ -132,7 +139,7 @@
     }
 
     // Make the interval just less than the transition duration so motion never stops
-    setInterval(iterate, 3000);
+    setInterval(iterate, 5000);
 
   </script>
 </body>
